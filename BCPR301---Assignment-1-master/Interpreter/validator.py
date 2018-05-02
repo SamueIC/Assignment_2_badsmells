@@ -143,68 +143,47 @@ class Validator:
         result = True
         for key, value in row.items():
             if key == "ID":
-                try:
-                    if a.check_empid(value) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_empid(value))
-                except TypeError:
-                    print("TypeError")
+                if a.check_empid(value) is False:
+                    result = False
+                    return result
+                else:
+                    a.push_value(key, a.check_empid(value))
             elif key == "Gender":
-                try:
-                    if a.check_gender(value) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_gender(value))
-                except TypeError:
-                    print("TypeError")
+                if a.check_gender(value) is False:
+                    result = False
+                    return result
+                else:
+                    a.push_value(key, a.check_gender(value))
             elif key == "Age":
-                try:
-                    if a.check_age(value) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_age(value))
-                except TypeError:
-                    print("TypeError")
+                if a.check_age(value) is False:
+                    result = False
+                    return result
+                else:
+                    a.push_value(key, a.check_age(value))
             elif key == "Sales":
-                try:
-                    if a.check_sales(value) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_sales(value))
-                except TypeError:
-                    print("TypeError")
+                if a.check_sales(value) is False:
+                    result = False
+                    return result
+                else:
+                    a.push_value(key, a.check_sales(value))
             elif key == "BMI":
-                try:
-                    if a.check_BMI(value) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_BMI(value))
-                except TypeError:
-                    print("TypeError")
+                if a.check_BMI(value) is False:
+                    result = False
+                    return result
+                else:
+                    a.push_value(key, a.check_BMI(value))
             elif key == "Salary":
-                try:
-                    if a.check_salary(value) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_salary(value))
-                except TypeError:
-                    print("TypeError")
+                if a.check_salary(value) is False:
+                    result = False
+                    return result
+                else:
+                    a.push_value(key, a.check_salary(value))
             elif key == "Birthday":
-                try:
-                    if a.check_birthday(value) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_birthday(value))
-                except TypeError:
-                    print("TypeError")
+                if a.check_birthday(value) is False:
+                    result = False
+                    return result
+                else:
+                    a.push_value(key, a.check_birthday(value))
             else:
                 result = False
                 return result
