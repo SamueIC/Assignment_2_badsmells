@@ -39,7 +39,7 @@ class Validator:
         :return:
         # Wesley
         >>> v = Validator()
-        >>> v.check_gender("M")
+        >>> v.fix_gender("M")
         'M'
         """
         match = re.match(self.gender, new_gender)
@@ -233,3 +233,60 @@ class Validator:
 
 
 a = Validator()
+
+
+def check_age(self, new_age):
+    """
+    Checks the age matches validation rules
+    :param new_age:
+    :return:
+    # Wesley
+    >>> v = Validator()
+    >>> v.check_age("24")
+    '24'
+    """
+    new_age = str(new_age)
+    match = re.match(self.age, new_age)
+    if match:
+        return new_age
+    else:
+        new_age = False
+        return new_age
+
+
+def check_sales(self, new_sales):
+    """
+    Checks the sales matches validation rules
+    :param new_sales:
+    :return:
+    # Wesley
+    >>> v = Validator()
+    >>> v.check_sales('20')
+    False
+    """
+    new_sales = str(new_sales)
+    match = re.match(self.sales, new_sales)
+    if match:
+        return new_sales
+    else:
+        new_sales = False
+        return new_sales
+
+
+def check_salary(self, new_salary):
+    """
+    Checks the salary matches validation rules
+    :param new_salary:
+    :return:
+    # Wesley
+    >>> v = Validator()
+    >>> v.check_salary('2000')
+    False
+    """
+    new_salary = str(new_salary)
+    match = re.match(self.salary, new_salary)
+    if match:
+        return new_salary
+    else:
+        new_salary = False
+        return new_salary

@@ -18,7 +18,7 @@ class TestValidator(TestCase):
         empid = "A12323123123"
         expected = False
 
-        result = self.validator.check_empid(empid)
+        result = self.validator.check_all(empid, new_key='empid')
         self.assertEqual(expected, result)
 
     def test_empid_valid(self):
@@ -28,7 +28,7 @@ class TestValidator(TestCase):
         empid = "Q666"
         expected = "Q666"
 
-        result = self.validator.check_empid(empid)
+        result = self.validator.check_all(empid, new_key='empid')
         self.assertEqual(expected, result)
 
     def test_gender_true_female_letter(self):
@@ -37,8 +37,8 @@ class TestValidator(TestCase):
         """
         gender = "F"
         expected = "F"
-
-        result = self.validator.check_gender(gender)
+        # fix this!!
+        result = self.validator.check_all(gender, new_key='gender')
         self.assertEqual(expected, result)
 
     def test_gender_true_female_string(self):
@@ -48,7 +48,7 @@ class TestValidator(TestCase):
         gender = "Female"
         expected = "F"
 
-        result = self.validator.check_gender(gender)
+        result = self.validator.check_all(gender, new_key='gender')
         self.assertEqual(expected, result)
 
     def test_gender_true_male_string(self):
@@ -58,7 +58,7 @@ class TestValidator(TestCase):
         gender = "male"
         expected = "M"
 
-        result = self.validator.check_gender(gender)
+        result = self.validator.check_all(gender, new_key='gender')
         self.assertEqual(expected, result)
 
     def test_gender_false(self):
@@ -68,7 +68,7 @@ class TestValidator(TestCase):
         gender = "transgender"
         expected = False
 
-        result = self.validator.check_gender(gender)
+        result = self.validator.check_all(gender, new_key='gender')
         self.assertEqual(expected, result)
 
     def test_age_true(self):
@@ -78,7 +78,7 @@ class TestValidator(TestCase):
         age = "23"
         expected = "23"
 
-        result = self.validator.check_age(age)
+        result = self.validator.check_all(age, new_key='age')
         self.assertEqual(expected, result)
 
     def test_age_false(self):
@@ -88,7 +88,7 @@ class TestValidator(TestCase):
         age = "213"
         expected = False
 
-        result = self.validator.check_age(age)
+        result = self.validator.check_all(age, new_key='age')
         self.assertEqual(expected, result)
 
     def test_sales_true(self):
@@ -98,7 +98,7 @@ class TestValidator(TestCase):
         sales = "123"
         expected = "123"
 
-        result = self.validator.check_sales(sales)
+        result = self.validator.check_all(sales, new_key='sales')
         self.assertEqual(expected, result)
 
     def test_sales_false(self):
@@ -108,7 +108,7 @@ class TestValidator(TestCase):
         sales = "1233"
         expected = False
 
-        result = self.validator.check_sales(sales)
+        result = self.validator.check_all(sales, new_key='sales')
         self.assertEqual(expected, result)
 
     def test_BMI_true(self):
@@ -118,7 +118,7 @@ class TestValidator(TestCase):
         BMI = "Normal"
         expected = "Normal"
 
-        result = self.validator.check_BMI(BMI)
+        result = self.validator.check_all(BMI, new_key='bmi')
         self.assertEqual(expected, result)
 
     def test_BMI_lowercase(self):
@@ -128,7 +128,7 @@ class TestValidator(TestCase):
         BMI = "overweight"
         expected = "Overweight"
 
-        result = self.validator.check_BMI(BMI)
+        result = self.validator.check_all(BMI, new_key='bmi')
         self.assertEqual(expected, result)
 
     def test_BMI_false(self):
@@ -138,7 +138,7 @@ class TestValidator(TestCase):
         BMI = "Fatty"
         expected = False
 
-        result = self.validator.check_BMI(BMI)
+        result = self.validator.check_all(BMI, new_key='bmi')
         self.assertEqual(expected, result)
 
     def test_salary_true(self):
@@ -148,7 +148,7 @@ class TestValidator(TestCase):
         salary = "456"
         expected = "456"
 
-        result = self.validator.check_salary(salary)
+        result = self.validator.check_all(salary, new_key='salary')
         self.assertEqual(expected, result)
 
     def test_salary_false(self):
@@ -158,7 +158,7 @@ class TestValidator(TestCase):
         salary = "456million"
         expected = False
 
-        result = self.validator.check_salary(salary)
+        result = self.validator.check_all(salary, new_key='salary')
         self.assertEqual(expected, result)
 
     def test_birthday_true(self):
@@ -168,17 +168,17 @@ class TestValidator(TestCase):
         birthday = "13/12/1994"
         expected = "13/12/1994"
 
-        result = self.validator.check_birthday(birthday)
+        result = self.validator.check_all(birthday, new_key='birthday')
         self.assertEqual(expected, result)
 
-    def test_birthday_false(self):
+    def test_birthday_false_delim_fix(self):
         """
         Tests validating data
         """
         birthday = "13-12-1994"
-
-        result = self.validator.check_birthday(birthday)
-        self.assertFalse(result)
+        result = self.validator.check_all(birthday, new_key='birthday')
+        expected = "13/12/1994"
+        self.assertEqual(expected, result)
 
     def test_xlxs_date(self):
         """"
@@ -199,13 +199,12 @@ class TestValidator(TestCase):
                          'Birthday': '01/01/1996'}}
         result2 = self.validator.save_dict(data2)
         self.assertEqual(result2, expected2)
-        # may need to tweak this method to accurately show coverage
 
     def test_z_save_dict_invalid(self):
         """
         Test static checker method
         """
-        data1 = {0: {'ID': 'A1232', 'Gender': 'F', 'Age': '21', 'Sales': '101', 'BMI': 'Normal', 'Salary': '12',
+        data1 = {0: {'ID': 'A123', 'Gender': 'F', 'Age': '212', 'Sales': '101', 'BMI': 'Normal', 'Salary': '12',
                      'Birthday': '01/01/1996'},
                  1: {'ID': 'Q999', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',
                      'Birthday': '01/01/1996'}
@@ -220,15 +219,24 @@ class TestValidator(TestCase):
         """
         Test static checker method
         """
-        data = {0: {'ID': 'A1232', 'Gender': 'F', 'Age': '21', 'Sales': '101', 'BMI': 'Normal', 'Salary': '12',
+        data = {0: {'ID': 'A123', 'Gender': 'F', 'Age': '201', 'Sales': '101', 'BMI': 'Normal', 'Salary': '12',
                     'Birthday': '01/01/1996'},
                 1: {'ID': 'A123', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',
                     'Birthday': '01/01/1996'}
                 }
+
         expected = {1: {'ID': 'A123', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',
                         'Birthday': '01/01/1996'}
                     }
-        result = Validator.save_dict(data)
-        print('result')
-        print(result)
+        result = self.validator.save_dict(data)
         self.assertEqual(result, expected)
+
+    def test_check_invalid_key(self):
+        """
+        Tests validating data
+        """
+        data = {'ASDSADASD': 'A123', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',
+                        'Birthday': '01/01/1996'}
+        result = self.validator.checker(data)
+        expected = False
+        self.assertEqual(expected, result)

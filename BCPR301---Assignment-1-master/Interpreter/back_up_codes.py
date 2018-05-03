@@ -42,7 +42,7 @@ class Validator:
         :return:
         # Wesley
         >>> v = Validator()
-        >>> v.check_gender("M")
+        >>> v.fix_gender("M")
         'M'
         """
         match = re.match(self.gender, new_gender)
@@ -279,7 +279,7 @@ class Validator:
         :return:
         # Wesley
         >>> v = Validator()
-        >>> v.check_gender("M")
+        >>> v.fix_gender("M")
         'M'
         """
         match = re.match(self.gender, new_gender)
