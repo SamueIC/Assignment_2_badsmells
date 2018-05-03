@@ -101,6 +101,7 @@ class Graph:
         self.graph_type = None
 
     # Wesley
+    # Rename method to be more obvious?
     def set_data(self, dictionary, a_type, filename):
         """
         Set the data to be used
@@ -118,6 +119,8 @@ class Graph:
         }
         self.graph_type = types[a_type]
 
+
+    # Feature Envy on these 3 methods, all they do is interface with methods from another class
     # Wesley
     def set_criteria(self, criteria_1, criteria_2):
         self.graph_type.set_criteria(criteria_1, criteria_2)
@@ -130,6 +133,7 @@ class Graph:
     def draw(self, x_key, y_key, title):
         self.graph_type.draw_graph(x_key, y_key, title)
 
+a = Graph()
 
 #######################################################################################################################
 # This section is just to test everything to check that it works, must be commented before running from shell

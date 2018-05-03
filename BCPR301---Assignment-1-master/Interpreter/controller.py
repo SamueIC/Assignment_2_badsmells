@@ -78,9 +78,3 @@ class Controller:
         if self.data is not None:
             return True
         return False
-
-
-# Controller shouldn't run doctests???
-# if __name__ == "__main__":
-#     c = Controller()
-#     doctest.testmod()

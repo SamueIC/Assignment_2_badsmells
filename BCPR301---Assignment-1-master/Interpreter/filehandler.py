@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 from csv import DictReader as CSVDictReader
 from openpyxl import load_workbook, utils
 from datetime import datetime, date
-from validator import Validator
+from Interpreter.validator import Validator
 
 
 # James
@@ -12,17 +12,7 @@ class FileHandler:
     def __init__(self, file_name):
         self.filename = file_name
         self.file_type = None
-        self.valid = Validator()
-
-    # James
-    # @staticmethod
-    # def get_file_name():
-    #     cwd = './Saves/'
-    #     for file in Path(cwd).iterdir():
-    #         print(file)
-    #     file = input("Which file do you wish to load? >>> ")
-    #     filename = Path(cwd+file)
-    #     return filename
+        # self.valid = Validator()
 
     # James
     def file_exist(self):
@@ -61,7 +51,6 @@ class FileTypeAbstract(metaclass=ABCMeta):
     @abstractmethod
     def read(self, filename):
         pass
-
 
 
 # Wesley
@@ -147,7 +136,7 @@ class FileTypeTXT(FileTypeAbstract):
         empno = 0
         try:
 
-            for line in file: # FIRST LOOP
+            for line in file:  # FIRST LOOP
                 rows = line.split(";")
                 dictionary = dict()
                 for row in rows:
@@ -161,7 +150,7 @@ class FileTypeTXT(FileTypeAbstract):
                         print("File error")
                         raise ValueError
                 empno += 1
-            result = Validator.save_dict(data)
+            result = self.validator.save_dict(data)
             return result
 
         except Exception as e:

@@ -25,24 +25,26 @@ class Validator:
         True
         """
         new_key = getattr(self, new_key)
-        new_value = str(new_value)
-        # Remove invalid delims
-        new_value = self.fix_bday_delims(new_value)
-        # Fix long-hand gender notation
-        new_value = self.fix_gender(new_value)
-        # Match all standard RegEx
-        match = re.match(new_key, new_value)
-        # Check this functions correctly and is in correct call order
-        match_bmi = self.fix_bmi(new_value)
+        check_value = str(new_value)
 
+        # Remove invalid delims
+        check_value = self.fix_bday_delims(check_value)
+        # Fix long-hand gender notation
+        check_value = self.fix_gender(check_value)
+        match_bmi = self.fix_bmi(check_value)
+
+        # Match all standard RegEx
+        match = re.match(new_key, check_value)
+
+# THIS IS FUCKED AS FIX IT
         if match:
-            return new_value
+            a = check_value
+            return a
         elif match_bmi is True:
-            new_value = new_value.capitalize()
-            return new_value
-        else:
-            new_value = False
-            return new_value
+            new_bmi = check_value.capitalize()
+            return new_bmi
+        elif match is None:
+            return False
 
     @staticmethod
     def fix_bmi(new_bmi):
@@ -64,7 +66,7 @@ class Validator:
 
     @staticmethod
     def fix_bday_delims(new_birthday):
-        invalid_delims = "^(|/\\.:;,_)$"
+        invalid_delims = "^(|/\\.:;,_-)$"
         for i in invalid_delims:
             new_birthday = new_birthday.replace(i, "/")
         return new_birthday
@@ -75,19 +77,20 @@ class Validator:
 
     def checker(self, row):
         for key, value in row.items():
-            if key == "ID" or "EMPID" or "Gender" or "Age" or "Sales" or "Salary" or "Birthday" or "BMI":
+            valid_keys = {"ID", "EMPID", "Gender", "Age", "Sales", "Salary", "Birthday", "BMI"}
+
+            if key in valid_keys:
                 if key == "ID":
                     key2 = "empid"
                 else:
                     key2 = key.lower()  # THIS IS A HACK FIX
+
                 if self.check_all(value, key2) is False:
-                    result = False
-                    return result
+                    return False
                 else:
                     self.push_value(key, self.check_all(value, key2))
             else:
-                result = False
-                return result
+                return False
 
     def save_dict(self, loaded_dict):
         for empno, row in loaded_dict.items():

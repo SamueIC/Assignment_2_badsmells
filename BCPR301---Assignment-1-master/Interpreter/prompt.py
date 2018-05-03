@@ -1,5 +1,5 @@
 from cmd import Cmd
-from controller import Controller
+from Interpreter.controller import Controller
 from os import path, chdir, getcwd
 import re
 # from re import match, search
@@ -127,8 +127,6 @@ class Shell(Cmd):
         else:
             print("Invalid command")
 
-
-
     def do_graph(self, arg):
         """
         Syntax:
@@ -152,8 +150,10 @@ class Shell(Cmd):
                     criteria = input("What are the criteria? ([key] [value - optional]) > ")
                     crit = criteria.split(" ")
                     if len(crit) > 1:
+                        # Feature Envy refactoring controller.graph.set_criteria
                         self.controller.set_criteria(crit[0], crit[1])
                     else:
+                        # Feature Envy refactoring
                         self.controller.set_criteria(crit[0])
                     keys = input("What keys to use? ([key1] [key2]) > ")
                     a_key = keys.split(" ")
@@ -175,7 +175,6 @@ class Shell(Cmd):
                 print("This key is invalid")
         else:
             print("Please set data before attempting to create a graph")
-
 
     def do_quit(self, arg):
         """
