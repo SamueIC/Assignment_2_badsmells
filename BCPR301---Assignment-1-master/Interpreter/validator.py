@@ -13,126 +13,56 @@ class Validator:
         self.BMI = "^(Normal|Overweight|Obesity|Underweight)$"
         self.salary = "^([\d]{2}|[\d]{3})$"
         self.birthday = "^(0[1-9]|[1-2][0-9]|3(0|1))(/)(0[1-9]|1[0-2])(/)(19|20)[0-9]{2}$"
-        # self.birthday = "^(0[1-9]|[1-2][0-9]|3(0|1))(-|/)(0[1-9]|1[0-2])(-|/)(19|20)[0-9]{2}$"
 
-    def check_empid(self, new_empid):
-        """
-        Checks the empid matches validation rules
-        :param new_empid:
-        :return:
-        # Wesley
-        >>> v = Validator()
-        >>> v.check_empid("A123")
-        'A123'
-        """
-        match = re.match(self.empid, new_empid)
-        if match:
-            return new_empid
-        else:
-            new_empid = False
-            return new_empid
+    def check_all(self, new_value, new_key):
+        new_key = getattr(self, new_key)
+        new_value = str(new_value)
+        # Remove invalid delims
+        new_value = self.fix_bday_delims(new_value)
+        # Fix long-hand gender notation
+        new_value = self.fix_gender(new_value)
+        # Match all standard RegEx
+        match = re.match(new_key, new_value)
+        # Check this functions correctly and is in correct call order
+        match_bmi = self.fix_bmi(new_value)
 
-    def check_gender(self, new_gender):
-        """
-        Checks the gender matches validation rules
-        :param new_gender:
-        :return:
-        # Wesley
-        >>> v = Validator()
-        >>> v.check_gender("M")
-        'M'
-        """
-        match = re.match(self.gender, new_gender)
         if match:
-            return new_gender
+            return new_value
+
+        elif match_bmi is True:
+            new_value = new_value.capitalize()
+            return new_value
+
         else:
-            match = re.match("^((m|M)ale)$", new_gender)
+            new_value = False
+            return new_value
+
+    @staticmethod
+    def fix_bmi(new_bmi):
+        match = re.match("^(normal|overweight|obesity|underweight)$", new_bmi)
+        if match:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def fix_gender(new_gender):
+            match = re.match("^(m|M)ale$", new_gender)
             if match:
                 new_gender = "M"
                 return new_gender
-            fmatch = re.match("^((f|F)emale)$", new_gender)
+            fmatch = re.match("^(f|F)emale$", new_gender)
             if fmatch:
                 new_gender = "F"
                 return new_gender
-            new_gender = False
             return new_gender
 
-    def check_age(self, new_age):
-        """
-        Checks the age matches validation rules
-        :param new_age:
-        :return:
-        # Wesley
-        >>> v = Validator()
-        >>> v.check_age("24")
-        '24'
-        """
-        new_age = str(new_age)
-        match = re.match(self.age, new_age)
-        if match:
-            return new_age
-        else:
-            new_age = False
-            return new_age
-
-    def check_sales(self, new_sales):
-        """
-        Checks the sales matches validation rules
-        :param new_sales:
-        :return:
-        # Wesley
-        >>> v = Validator()
-        >>> v.check_sales('20')
-        False
-        """
-        new_sales = str(new_sales)
-        match = re.match(self.sales, new_sales)
-        if match:
-            return new_sales
-        else:
-            new_sales = False
-            return new_sales
-
-    def check_BMI(self, new_BMI):
-        """
-        Checks the BMI matches validation rules
-        :param new_BMI:
-        :return:
-        # Wesley
-        >>> v = Validator()
-        >>> v.check_BMI("normal")
-        'Normal'
-        """
-        match = re.match(self.BMI, new_BMI)
-        if match:
-            return new_BMI
-        else:
-            match = re.match("^(normal|overweight|obesity|underweight)$", new_BMI)
-            if match:
-                new_BMI = new_BMI.capitalize()
-                return new_BMI
-            new_BMI = False
-            return new_BMI
-
-    def check_salary(self, new_salary):
-        new_salary = str(new_salary)
-        match = re.match(self.salary, new_salary)
-        if match:
-            return new_salary
-        else:
-            new_salary = False
-            return new_salary
-
-    def check_birthday(self, new_birthday):
+    @staticmethod
+    def fix_bday_delims(new_birthday):
         invalid_delims = "^(|/\\.:;,_)$"
         for i in invalid_delims:
             new_birthday = new_birthday.replace(i, "/")
-        match = re.match(self.birthday, new_birthday)
-        if match:
-            return new_birthday
-        else:
-            new_birthday = False
-            return new_birthday
+        return new_birthday
 
     @staticmethod
     def xlsx_date(a_date):
@@ -143,47 +73,72 @@ class Validator:
         result = True
         for key, value in row.items():
             if key == "ID":
-                if a.check_empid(value) is False:
-                    result = False
-                    return result
-                else:
-                    a.push_value(key, a.check_empid(value))
+                try:
+                    if a.check_all(value, key) is False:
+                        result = False
+                        return result
+                    else:
+                        a.push_value(key, a.check_all(value, key))
+                except TypeError:
+                    print("TypeError")
             elif key == "Gender":
-                if a.check_gender(value) is False:
-                    result = False
-                    return result
-                else:
-                    a.push_value(key, a.check_gender(value))
+                try:
+                    if a.fix_gender(value) is False:
+                        result = False
+                        return result
+                    else:
+                        a.push_value(key, a.fix_gender(value))
+                except TypeError:
+                    print("TypeError")
             elif key == "Age":
-                if a.check_age(value) is False:
-                    result = False
-                    return result
-                else:
-                    a.push_value(key, a.check_age(value))
+                try:
+                    key2 = key.lower()
+                    if a.check_all(value, key2) is False:
+                        result = False
+                        return result
+                    else:
+                        a.push_value(key, a.check_all(value, key2))
+                except TypeError:
+                    print("TypeError")
             elif key == "Sales":
-                if a.check_sales(value) is False:
-                    result = False
-                    return result
-                else:
-                    a.push_value(key, a.check_sales(value))
+                try:
+                    key2 = key.lower()
+                    if a.check_all(value, key2) is False:
+                        result = False
+                        return result
+                    else:
+                        a.push_value(key, a.check_all(value, key2))
+                except TypeError:
+                    print("TypeError")
             elif key == "BMI":
-                if a.check_BMI(value) is False:
-                    result = False
-                    return result
-                else:
-                    a.push_value(key, a.check_BMI(value))
+                try:
+                    if a.check_all(value, key) is False:
+                        result = False
+                        return result
+                    else:
+                        a.push_value(key, a.check_all(value, key))
+                except TypeError:
+                    print("TypeError")
             elif key == "Salary":
-                if a.check_salary(value) is False:
-                    result = False
-                    return result
-                else:
-                    a.push_value(key, a.check_salary(value))
+                try:
+                    key2 = key.lower()
+                    if a.check_all(value, key2) is False:
+                        result = False
+                        return result
+                    else:
+                        a.push_value(key, a.check_all(value, key2))
+                except TypeError:
+                    print("TypeError")
             elif key == "Birthday":
-                if a.check_birthday(value) is False:
-                    result = False
-                    return result
-                else:
-                    a.push_value(key, a.check_birthday(value))
+                try:
+                    key2 = key.lower()
+                    if a.check_all(value, key2) is False:
+                        result = False
+                        return result
+                    else:
+                        a.push_value(key, a.check_all(value, key2))
+                except TypeError:
+                    print("TypeError")
             else:
                 result = False
                 return result
