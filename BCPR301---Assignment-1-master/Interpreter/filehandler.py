@@ -12,6 +12,7 @@ class FileHandler:
     def __init__(self, file_name):
         self.filename = file_name
         self.file_type = None
+        self.valid = Validator()
 
     # James
     # @staticmethod
@@ -54,6 +55,8 @@ class FileHandler:
 
 # Wesley
 class FileTypeAbstract(metaclass=ABCMeta):
+    def __init__(self):
+        self.validator = Validator()
     # Wesley
     @abstractmethod
     def read(self, filename):
@@ -95,9 +98,10 @@ class FileTypeXLSX(FileTypeAbstract):
                 empno += 1
             # print(data)
             result = Validator.save_dict(data)
+            return result
         except PermissionError:
             print("Sorry, you don't have enough permissions to access this file")
-        return result
+
 # The above function contains a date object in the dictionary for each date,
 # as the birthday is a date, may need to access the values stored in the date object when validating
 
@@ -109,7 +113,8 @@ class FileTypeCSV(FileTypeAbstract):
         """
         Return dictionary with key => value pairs
         :param filename is the file where the values exist
-        >>> read("Saves/data.csv")
+        >>> a=FileTypeCSV()
+        >>> FileTypeCSV.read(a,"Saves/data.csv")
         """
         try:
             data = dict()
@@ -135,7 +140,7 @@ class FileTypeTXT(FileTypeAbstract):
         """
         Return dictionary with key => value pairs
         :param filename is the file where the values exist
-        >>> read("Saves/data.txt")
+        >>> FileTypeTXT.read("Saves/data.txt")
         """
         file = open(filename, 'r')
         data = dict()
@@ -161,43 +166,3 @@ class FileTypeTXT(FileTypeAbstract):
 
         except Exception as e:
             print(e)
-
-#        if len(row.split("=")) == 2:
-#            key = row.split("=")[0]
-#            value = row.split("=")[1]
-#            value = value.rstrip('\n')
-#            dictionary[key] = value
-#            data[empno] = dictionary
-#        else:
-#            print("File error")
-#            raise ValueError
-# class FileTypeTXT(FileTypeAbstract):
-#     def read(self, filename):
-#         """
-#         Return dictionary with key => value pairs
-#         :param filename is the file where the values exist
-#         >>> read("Saves/data.txt")
-#         """
-#         empno = 0
-#         file = open(filename, 'r')
-#         dictionary = dict()
-#         data = dict()
-#         try:
-#             for line in file:
-#                 rows = line.split(";")
-#                 for row in rows:
-#                     if len(row.split("=")) == 2:
-#                         key = row.split("=")[0]
-#                         value = row.split("=")[1]
-#                         value = value.rstrip('\n')
-#                         dictionary[key] = value
-#                         data[empno] = dictionary
-#                         empno += 1
-#                     else:
-#                         print("File error")
-#                         raise FileNotFoundError
-#
-#             result = Validator.save_dict(data)
-#         except Exception as e:
-#             print(e)
-#         return result

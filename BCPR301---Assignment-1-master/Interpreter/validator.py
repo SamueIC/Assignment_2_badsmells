@@ -10,11 +10,20 @@ class Validator:
         self.gender = "^(M|F)$"
         self.age = "^[\d]{2}$"
         self.sales = "^[\d]{3}$"
-        self.BMI = "^(Normal|Overweight|Obesity|Underweight)$"
+        self.bmi = "^(Normal|Overweight|Obesity|Underweight)$"
         self.salary = "^([\d]{2}|[\d]{3})$"
         self.birthday = "^(0[1-9]|[1-2][0-9]|3(0|1))(/)(0[1-9]|1[0-2])(/)(19|20)[0-9]{2}$"
 
     def check_all(self, new_value, new_key):
+        """
+        :param new_value:
+        :param new_key:
+        :return:
+        >>> v = Validator()
+        >>> v.checker({'ID': 'Q999', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',\
+                     'Birthday': '01/01/1996'})
+        True
+        """
         new_key = getattr(self, new_key)
         new_value = str(new_value)
         # Remove invalid delims
@@ -28,11 +37,9 @@ class Validator:
 
         if match:
             return new_value
-
         elif match_bmi is True:
             new_value = new_value.capitalize()
             return new_value
-
         else:
             new_value = False
             return new_value
@@ -48,13 +55,11 @@ class Validator:
     @staticmethod
     def fix_gender(new_gender):
             match = re.match("^(m|M)ale$", new_gender)
+            fmatch = re.match("^(f|F)emale$", new_gender)
             if match:
                 new_gender = "M"
-                return new_gender
-            fmatch = re.match("^(f|F)emale$", new_gender)
-            if fmatch:
+            elif fmatch:
                 new_gender = "F"
-                return new_gender
             return new_gender
 
     @staticmethod
@@ -68,90 +73,30 @@ class Validator:
     def xlsx_date(a_date):
         return a_date.date().strftime("%d-%m-%Y")
 
-    @staticmethod
-    def checker(row):
-        result = True
+    def checker(self, row):
         for key, value in row.items():
-            if key == "ID":
-                try:
-                    if a.check_all(value, key) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_all(value, key))
-                except TypeError:
-                    print("TypeError")
-            elif key == "Gender":
-                try:
-                    if a.fix_gender(value) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.fix_gender(value))
-                except TypeError:
-                    print("TypeError")
-            elif key == "Age":
-                try:
-                    key2 = key.lower()
-                    if a.check_all(value, key2) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_all(value, key2))
-                except TypeError:
-                    print("TypeError")
-            elif key == "Sales":
-                try:
-                    key2 = key.lower()
-                    if a.check_all(value, key2) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_all(value, key2))
-                except TypeError:
-                    print("TypeError")
-            elif key == "BMI":
-                try:
-                    if a.check_all(value, key) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_all(value, key))
-                except TypeError:
-                    print("TypeError")
-            elif key == "Salary":
-                try:
-                    key2 = key.lower()
-                    if a.check_all(value, key2) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_all(value, key2))
-                except TypeError:
-                    print("TypeError")
-            elif key == "Birthday":
-                try:
-                    key2 = key.lower()
-                    if a.check_all(value, key2) is False:
-                        result = False
-                        return result
-                    else:
-                        a.push_value(key, a.check_all(value, key2))
-                except TypeError:
-                    print("TypeError")
+            if key == "ID" or "EMPID" or "Gender" or "Age" or "Sales" or "Salary" or "Birthday" or "BMI":
+                if key == "ID":
+                    key2 = "empid"
+                else:
+                    key2 = key.lower()  # THIS IS A HACK FIX
+                if self.check_all(value, key2) is False:
+                    result = False
+                    return result
+                else:
+                    self.push_value(key, self.check_all(value, key2))
             else:
                 result = False
                 return result
 
-    @staticmethod
-    def save_dict(loaded_dict):
+    def save_dict(self, loaded_dict):
         for empno, row in loaded_dict.items():
-            b = a.checker(row)
+            b = self.checker(row)
             if b is False:
                 print("Error at entry: " + str(empno))
             else:
-                a.push_row(empno)
-        return a.return_dict()
+                self.push_row(empno)
+        return self.return_dict()
 
     def push_value(self, key, val):
         self.temp_dict[key] = val
@@ -164,6 +109,3 @@ class Validator:
 
     def return_dict(self):
         return self.valid_dict
-
-
-a = Validator()
