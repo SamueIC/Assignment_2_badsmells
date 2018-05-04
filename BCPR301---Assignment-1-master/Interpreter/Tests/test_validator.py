@@ -176,7 +176,7 @@ class TestValidator(TestCase):
         Tests validating data
         """
         birthday = "13-12-1994"
-        result = self.validator.check_all(birthday, new_key='birthday')
+        result = self.validator.check_all(birthday, new_key='Birthday')
         expected = "13/12/1994"
         self.assertEqual(expected, result)
 
@@ -188,6 +188,36 @@ class TestValidator(TestCase):
         test_date = datetime(1994, 12, 13)
         result = Validator.xlsx_date(test_date)
         self.assertEquals(expected, result)
+
+    def test_birthday_day_length(self):
+        """
+        Tests validating data
+        """
+        birthday = "1/12/1994"
+        expected = "1/12/1994"
+
+        result = self.validator.check_all(birthday, new_key='birthday')
+        self.assertEqual(expected, result)
+
+    def test_birthday_month_length(self):
+        """
+        Tests validating data
+        """
+        birthday = "13/1/1994"
+        expected = "13/1/1994"
+
+        result = self.validator.check_all(birthday, new_key='birthday')
+        self.assertEqual(expected, result)
+
+    def test_birthday_both_length(self):
+        """
+        Tests validating data
+        """
+        birthday = "1/1/1994"
+        expected = "1/1/1994"
+
+        result = self.validator.check_all(birthday, new_key='birthday')
+        self.assertEqual(expected, result)
 
     def test_save_dict_valid(self):
         """

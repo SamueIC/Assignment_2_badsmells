@@ -12,7 +12,10 @@ class Validator:
         self.sales = "^[\d]{3}$"
         self.bmi = "^((n|N)ormal)|((o|O)verweight)|((o|O)besity)|((u|U)nderweight)$"
         self.salary = "^([\d]{2}|[\d]{3})$"
-        self.birthday = "^(0[1-9]|[1-2][0-9]|3(0|1))(/)(0[1-9]|1[0-2])(/)(19|20)[0-9]{2}$"
+        self.birthday = "^(((0[1-9])|([1-31]))|[1-2][0-9]|3(0|1))(/)(((0[1-9])|([1-12]))|1[0-2])(/)(19|20)[0-9]{2}$"
+        # Old RegularExpression for birthday. Fixed issue of not being able to receive single digit day/month
+        # In birthdays. E.g. 1-1-1994
+        # self.birthday = "^(0[1-9]|[1-2][0-9]|3(0|1))(/)(0[1-9]|1[0-2])(/)(19|20)[0-9]{2}$"
 
     def check_all(self, new_value, new_key):
         """
@@ -24,7 +27,9 @@ class Validator:
                      'Birthday': '01/01/1996'})
         True
         """
-        new_key = getattr(self, new_key)
+        # new_key = getattr(self, new_key)
+        # Changed from ^ to v
+        new_key = getattr(self, new_key.lower())
         check_value = str(new_value)
 
         check_value = self.fix_bday_delims(check_value)
@@ -78,43 +83,18 @@ class Validator:
             valid_keys = {"id", "empid", "gender", "age", "sales", "salary", "birthday", "bmi"}
             key2 = key.lower()
 
-            # print("PAY ATTENTION TO THIS ONE")
-            # print(key2 + " " + value)
-            # print("PAY ATTENTION TO THIS")
-            # print(" ")
-
             if key2 in valid_keys:
-
-                # print("PAY ATTENTION TO THIS TWO")
-                # print(key2 + " " + value)
-                # print("PAY ATTENTION TO THIS ENDING ")
-                # print(" ")
 
                 if key2 == "id":
                     key2 = "empid"
-
                 elif key2 == "bmi":
                     value = value.lower()
-
                 else:
                     key2 = key2.lower()
 
-
-                # print("PAY ATTENTION TO THIS THREE")
-                # print(key2 + " " + value)
-                # print("PAY ATTENTION TO THIS")
-                # print(" ")
-
                 if self.check_all(value, key2) is False:
-                    print("mother fufufufufucker")
-                    print(value)
-                    print(key2)
                     return False
                 else:
-                    # print("PAY ATTENTION TO THIS FOUR")
-                    # print(key2 + " " + value)
-                    # print("PAY ATTENTION TO THIS")
-                    # print(" ")
                     self.push_value(key2.capitalize(), self.check_all(value, key2))
 
             else:
