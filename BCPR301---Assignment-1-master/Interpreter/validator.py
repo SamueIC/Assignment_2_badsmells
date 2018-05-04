@@ -10,7 +10,7 @@ class Validator:
         self.gender = "^(M|F)$"
         self.age = "^[\d]{2}$"
         self.sales = "^[\d]{3}$"
-        self.bmi = "^(Normal|Overweight|Obesity|Underweight)$"
+        self.bmi = "^((n|N)ormal)|((o|O)verweight)|((o|O)besity)|((u|U)nderweight)$"
         self.salary = "^([\d]{2}|[\d]{3})$"
         self.birthday = "^(0[1-9]|[1-2][0-9]|3(0|1))(/)(0[1-9]|1[0-2])(/)(19|20)[0-9]{2}$"
 
@@ -27,32 +27,30 @@ class Validator:
         new_key = getattr(self, new_key)
         check_value = str(new_value)
 
-        # Remove invalid delims
         check_value = self.fix_bday_delims(check_value)
-        # Fix long-hand gender notation
         check_value = self.fix_gender(check_value)
-        match_bmi = self.fix_bmi(check_value)
 
-        # Match all standard RegEx
+        # match_bmi = re.match(new_key, check_value.capitalize())
         match = re.match(new_key, check_value)
 
-# THIS IS FUCKED AS FIX IT
+        # print(" le match")
+        # print(check_value + " " + new_key)
         if match:
             a = check_value
             return a
-        elif match_bmi is True:
-            new_bmi = check_value.capitalize()
-            return new_bmi
+        # elif match_bmi is True:
+        #     new_bmi = check_value.lower()
+        #     return new_bmi
         elif match is None:
             return False
 
-    @staticmethod
-    def fix_bmi(new_bmi):
-        match = re.match("^(normal|overweight|obesity|underweight)$", new_bmi)
-        if match:
-            return True
-        else:
-            return False
+    # @staticmethod
+    # def fix_bmi(new_bmi):
+    #     match = re.match("^(normal|overweight|obesity|underweight)$", new_bmi)
+    #     if match:
+    #         return True
+    #     else:
+    #         return False
 
     @staticmethod
     def fix_gender(new_gender):
@@ -77,18 +75,48 @@ class Validator:
 
     def checker(self, row):
         for key, value in row.items():
-            valid_keys = {"ID", "EMPID", "Gender", "Age", "Sales", "Salary", "Birthday", "BMI"}
+            valid_keys = {"id", "empid", "gender", "age", "sales", "salary", "birthday", "bmi"}
+            key2 = key.lower()
 
-            if key in valid_keys:
-                if key == "ID":
+            # print("PAY ATTENTION TO THIS ONE")
+            # print(key2 + " " + value)
+            # print("PAY ATTENTION TO THIS")
+            # print(" ")
+
+            if key2 in valid_keys:
+
+                # print("PAY ATTENTION TO THIS TWO")
+                # print(key2 + " " + value)
+                # print("PAY ATTENTION TO THIS ENDING ")
+                # print(" ")
+
+                if key2 == "id":
                     key2 = "empid"
+
+                elif key2 == "bmi":
+                    value = value.lower()
+
                 else:
-                    key2 = key.lower()  # THIS IS A HACK FIX
+                    key2 = key2.lower()
+
+
+                # print("PAY ATTENTION TO THIS THREE")
+                # print(key2 + " " + value)
+                # print("PAY ATTENTION TO THIS")
+                # print(" ")
 
                 if self.check_all(value, key2) is False:
+                    print("mother fufufufufucker")
+                    print(value)
+                    print(key2)
                     return False
                 else:
-                    self.push_value(key, self.check_all(value, key2))
+                    # print("PAY ATTENTION TO THIS FOUR")
+                    # print(key2 + " " + value)
+                    # print("PAY ATTENTION TO THIS")
+                    # print(" ")
+                    self.push_value(key2.capitalize(), self.check_all(value, key2))
+
             else:
                 return False
 

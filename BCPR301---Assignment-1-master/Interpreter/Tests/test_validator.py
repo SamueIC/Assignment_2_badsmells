@@ -126,7 +126,7 @@ class TestValidator(TestCase):
         Tests validating data
         """
         BMI = "overweight"
-        expected = "Overweight"
+        expected = "overweight"
 
         result = self.validator.check_all(BMI, new_key='bmi')
         self.assertEqual(expected, result)
@@ -195,10 +195,10 @@ class TestValidator(TestCase):
         """
         data2 = {0: {'ID': 'Q123', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',
                      'Birthday': '01/01/1996'}}
-        expected2 = {0: {'ID': 'Q123', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',
-                         'Birthday': '01/01/1996'}}
+        expected2 = {0: {'Empid': 'Q123', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'Bmi': 'normal', 'Salary': '12', 'Birthday': '01/01/1996'}}
         result2 = self.validator.save_dict(data2)
         self.assertEqual(result2, expected2)
+        print(result2)
 
     def test_z_save_dict_invalid(self):
         """
@@ -209,7 +209,7 @@ class TestValidator(TestCase):
                  1: {'ID': 'Q999', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',
                      'Birthday': '01/01/1996'}
                  }
-        expected1 = {1: {'ID': 'Q999', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',
+        expected1 = {1: {'Empid': 'Q999', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'Bmi': 'normal', 'Salary': '12',
                          'Birthday': '01/01/1996'}
                      }
         result1 = self.validator.save_dict(data1)
@@ -225,7 +225,7 @@ class TestValidator(TestCase):
                     'Birthday': '01/01/1996'}
                 }
 
-        expected = {1: {'ID': 'A123', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'BMI': 'Normal', 'Salary': '12',
+        expected = {1: {'Empid': 'A123', 'Gender': 'F', 'Age': '21', 'Sales': '001', 'Bmi': 'normal', 'Salary': '12',
                         'Birthday': '01/01/1996'}
                     }
         result = self.validator.save_dict(data)
