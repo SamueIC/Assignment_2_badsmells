@@ -1,7 +1,7 @@
-from database_local import DBLocal
-from database_remote import DBRemote
-from pickler import Pickler
-from unpickler import Unpickler
+from Interpreter.database_local import DBLocal
+from Interpreter.database_remote import DBRemote
+from Interpreter.pickler import Pickler
+# from unpickler import Unpickler
 
 
 # Wesley
@@ -49,7 +49,7 @@ class DatabaseHandler:
     @local_decorator
     def insert_local_dict(self, dictionary):
         """Insert values into both the local and remote"""
-        pickled = Pickler.pickle_dictionary_values(dictionary)
+        pickled = Pickler.pickle_unpickle(dictionary)
         self.local.insert_dictionary(pickled)
         # print(self.local.get_db())
 
@@ -57,21 +57,21 @@ class DatabaseHandler:
     @remote_decorator
     def insert_remote_dict(self, dictionary):
         """Insert values into both the local and remote"""
-        pickled = Pickler.pickle_dictionary_values(dictionary)
+        pickled = Pickler.pickle_unpickle(dictionary)
         self.remote.insert_dictionary(pickled)
         # print(self.remote.get_db())
 
     # Wesley
     @local_decorator
     def get_local(self):
-        unpickle = Unpickler.unpickle_dictionary(self.local.get_db())
+        unpickle = Pickler.pickle_unpickle(self.local.get_db())
         return unpickle
         # print(unpickle)
 
     # Wesley
     @remote_decorator
     def get_remote(self):
-        unpickle = Unpickler.unpickle_dictionary(self.remote.get_db())
+        unpickle = Pickler.pickle_unpickle(self.remote.get_db())
         return unpickle
         # print(unpickle)
 

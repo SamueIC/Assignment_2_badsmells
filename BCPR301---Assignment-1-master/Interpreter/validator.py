@@ -13,9 +13,6 @@ class Validator:
         self.bmi = "^((n|N)ormal)|((o|O)verweight)|((o|O)besity)|((u|U)nderweight)$"
         self.salary = "^([\d]{2}|[\d]{3})$"
         self.birthday = "^(((0[1-9])|([1-31]))|[1-2][0-9]|3(0|1))(/)(((0[1-9])|([1-12]))|1[0-2])(/)(19|20)[0-9]{2}$"
-        # Old RegularExpression for birthday. Fixed issue of not being able to receive single digit day/month
-        # In birthdays. E.g. 1-1-1994
-        # self.birthday = "^(0[1-9]|[1-2][0-9]|3(0|1))(/)(0[1-9]|1[0-2])(/)(19|20)[0-9]{2}$"
 
     def check_all(self, new_value, new_key):
         """
@@ -27,35 +24,16 @@ class Validator:
                      'Birthday': '01/01/1996'})
         True
         """
-        # new_key = getattr(self, new_key)
-        # Changed from ^ to v
         new_key = getattr(self, new_key.lower())
         check_value = str(new_value)
-
         check_value = self.fix_bday_delims(check_value)
         check_value = self.fix_gender(check_value)
-
-        # match_bmi = re.match(new_key, check_value.capitalize())
         match = re.match(new_key, check_value)
-
-        # print(" le match")
-        # print(check_value + " " + new_key)
         if match:
             a = check_value
             return a
-        # elif match_bmi is True:
-        #     new_bmi = check_value.lower()
-        #     return new_bmi
         elif match is None:
             return False
-
-    # @staticmethod
-    # def fix_bmi(new_bmi):
-    #     match = re.match("^(normal|overweight|obesity|underweight)$", new_bmi)
-    #     if match:
-    #         return True
-    #     else:
-    #         return False
 
     @staticmethod
     def fix_gender(new_gender):
@@ -82,21 +60,17 @@ class Validator:
         for key, value in row.items():
             valid_keys = {"id", "empid", "gender", "age", "sales", "salary", "birthday", "bmi"}
             key2 = key.lower()
-
             if key2 in valid_keys:
-
                 if key2 == "id":
                     key2 = "empid"
                 elif key2 == "bmi":
                     value = value.lower()
                 else:
                     key2 = key2.lower()
-
                 if self.check_all(value, key2) is False:
                     return False
                 else:
                     self.push_value(key2.capitalize(), self.check_all(value, key2))
-
             else:
                 return False
 

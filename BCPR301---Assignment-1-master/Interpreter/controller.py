@@ -1,7 +1,7 @@
-from database_handler import DatabaseHandler
-from filehandler import FileHandler
+from Interpreter.database_handler import DatabaseHandler
+from Interpreter.filehandler import FileHandler
 from os import path
-from chart import Graph
+from Interpreter.chart import Graph
 import doctest
 
 
